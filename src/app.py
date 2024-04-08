@@ -56,7 +56,7 @@ def add_favorite_planet(planet_id):
     new_favorite = favorites(user_id=user_id, planet_id=planet_id)
     db.session.add(new_favorite)
     db.session.commit()
-    return jsonify(new_favorite.serialize()), 201
+    return jsonify(new_favorite.serialize()), 200
 
 @app.route('/favorite/planet/<int:planet_id>', methods=['DELETE'])
 def delete_favorite_planet(planet_id):
@@ -66,7 +66,7 @@ def delete_favorite_planet(planet_id):
         raise APIException("Favorite not found", status_code=404)
     db.session.delete(favorite_to_delete)
     db.session.commit()
-    return '', 204
+    return '', 200
     
 @app.route('/planets', methods=['GET'])
 def get_all_planets():
@@ -98,7 +98,7 @@ def add_favorite_person(people_id):
     new_favorite = favorites(user_id=user_id, people_id=people_id)
     db.session.add(new_favorite)
     db.session.commit()
-    return jsonify(new_favorite.serialize()), 201
+    return jsonify(new_favorite.serialize()), 200
 
 @app.route('/favorite/people/<int:people_id>', methods=['DELETE'])
 def delete_favorite_person(people_id):
@@ -108,8 +108,7 @@ def delete_favorite_person(people_id):
         raise APIException("Favorite not found", status_code=404)
     db.session.delete(favorite_to_delete)
     db.session.commit()
-    return '', 204
-
+    return '', 200
 
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
