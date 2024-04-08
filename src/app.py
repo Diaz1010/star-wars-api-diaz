@@ -92,10 +92,24 @@ def get_person(people_id):
         raise APIException("Person not found", status_code=404)
     return jsonify(person.serialize()), 200
 
-@app.route('/users/favorites', methods=['GET'])
-def get_all_favorites():
-    all_favorites = favorites.query.all()
-    return jsonify([favorite.serialize() for favorite in all_favorites]), 200
+@app.route('/favorite/people/<int:people_id>', methods=['POST'])
+def add_favorite_person(people_id):
+    user_id = request.json.get('user_id')
+    new_favorite = favorites(user_id=user_id, people_id=people_id)
+    db.session.add(new_favorite)
+    db.session.commit()
+    return jsonify(new_favorite.serialize()), 201
+
+@app.route('/favorite/people/<int:people_id>', methods=['DELETE'])
+def delete_favorite_person(people_id):
+    user_id = request.json.get('user_id')
+    favorite_to_delete = favorites.query.filter_by(user_id=user_id, people_id=people_id).first()
+    if favorite_to_delete is None:
+        raise APIException("Favorite not found", status_code=404)
+    db.session.delete(favorite_to_delete)
+    db.session.commit()
+    return '', 204
+
 
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
