@@ -5,8 +5,6 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
-    is_active = db.Column(db.Boolean(), unique=False, nullable=False)
-    favorites = db.relationship('favorites', backref='user', lazy=True)
 
     def __repr__(self):
         return '<User %r>' % self.id
@@ -67,7 +65,7 @@ class favorites(db.Model):
     planet_id = db.Column(db.Integer, db.ForeignKey('planets.id'))
     people_id = db.Column(db.Integer, db.ForeignKey('people.id'))
     
-    planet = db.relationship('planets')
+    planets = db.relationship('planets')
     people = db.relationship('people')
 
     def __repr__(self):
@@ -77,6 +75,6 @@ class favorites(db.Model):
         return {
             "id": self.id,
             "user_id": self.user_id,
-            "planet_id": self.planet_id,
-            "people_id": self.people_id
+            "planets": planets.serialize() if self.planet else None,
+            "people": people.serialize() if self.people else None
         }

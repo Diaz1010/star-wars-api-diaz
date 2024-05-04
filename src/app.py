@@ -46,6 +46,18 @@ def get_user(id):
         raise APIException("User not found", status_code=404)
     return jsonify(user.serialize()), 200
 
+@app.route('/register', methods=['POST'])
+def register():
+    username = request.json.get("username", None)
+    password = request.json.get("password", None)
+    if username is None or password is None:
+        return jsonify({"msg": "Bad username or password"}), 400
+
+    user = User(username=username, password=password,)
+    db.session.add(user)
+    db.session.commit()
+    return jsonify(user.serialize()), 201
+
 @app.route('/login', methods=['POST'])
 def login():
     username = request.json.get("username", None)
