@@ -63,7 +63,7 @@ class people(db.Model):
 
 class favorites(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     planet_id = db.Column(db.Integer, db.ForeignKey('planets.id'))
     people_id = db.Column(db.Integer, db.ForeignKey('people.id'))
     
